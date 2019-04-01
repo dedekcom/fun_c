@@ -1,0 +1,11 @@
+
+namespace Test;
+
+include tmp.second.Second;
+include tmp.x.y;
+
+<?c
+    int main() {
+        return 0;
+    }
+?>
