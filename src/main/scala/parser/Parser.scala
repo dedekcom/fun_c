@@ -3,6 +3,7 @@ package parser
 import org.antlr.v4.runtime.{CharStreams, CommonTokenStream}
 import fun_c._
 import parser.tree.FcSource
+import phases.p01gentree.GenTreeVisitor
 import utils.io.FileUtil
 
 object Parser {

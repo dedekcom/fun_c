@@ -14,8 +14,8 @@ namespace: KW_NAMESPACE namespace_path SEMI
     ;
 include: KW_INCLUDE namespace_path SEMI
     ;
-namespace_path: ID
-    | ID '.' namespace_path
+namespace_path: id
+    | id '.' namespace_path
     ;
 
 body:
@@ -25,6 +25,8 @@ body:
 
 c_block: C_BODY
     ;
+
+id: ID;
 
 C_BODY: '<?c' .*? '?>';
 

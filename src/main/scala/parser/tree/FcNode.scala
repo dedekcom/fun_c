@@ -11,7 +11,7 @@ case class FcAggregate(nodes: List[FcNode]) extends FcNode {
   override def getAggregate: List[FcNode] = nodes
 }
 
-case class FcId(id: String) extends FcNode
+case class FcId(id: String, meta: TokenMeta) extends FcNode
 
 case class FcNamespace(path: List[FcId]) extends FcNode
 
