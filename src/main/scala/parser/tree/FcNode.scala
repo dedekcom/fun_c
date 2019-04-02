@@ -13,10 +13,5 @@ case class FcAggregate(nodes: List[FcNode]) extends FcNode {
 
 case class FcId(id: String, meta: TokenMeta) extends FcNode
 
-case class FcNamespace(path: List[FcId]) extends FcNode
 
-case class FcInclude(path: List[FcId]) extends FcNode
 
-case class FcSource(namespace: FcNamespace, includes: List[FcInclude], body: List[FcNode]) extends FcNode
-
-case class FcCBlock(block: String) extends FcNode

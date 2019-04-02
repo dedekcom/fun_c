@@ -1,40 +1,10 @@
 package phases.p01gentree
 
-import fun_c.{FunCBaseVisitor, FunCParser}
+import fun_c.FunCBaseVisitor
 import parser.tree._
 
-import scala.collection.JavaConverters._
-
-class GenTreeVisitor extends FunCBaseVisitor[FcNode] {
+class GenTreeVisitor extends FunCBaseVisitor[FcNode] with GenBody with GenVals with GenSource with GenExpr {
 
   def joinNodes(first: FcNode, rest: FcNode): FcNode = FcAggregate(first :: rest.asInstanceOf[FcAggregate].nodes)
-
-  override def visitId(ctx: FunCParser.IdContext): FcNode = FcId(ctx.getText, TokenMeta(ctx))
-
-  override def visitC_block(ctx: FunCParser.C_blockContext): FcNode =
-    FcCBlock(ctx.C_BODY().getText)
-
-  override def visitInclude(ctx: FunCParser.IncludeContext): FcNode =
-    FcInclude(ctx.namespace_path().accept(this).getAggregate.map(_.asInstanceOf[FcId]))
-
-  override def visitNamespace(ctx: FunCParser.NamespaceContext): FcNode =
-    FcNamespace(ctx.namespace_path().accept(this).getAggregate.map(_.asInstanceOf[FcId]))
-
-  override def visitNamespace_path(ctx: FunCParser.Namespace_pathContext): FcNode = {
-    val first = ctx.id().accept(this)
-    val rest = ctx.namespace_path()
-    if (rest == null) {
-      FcAggregate(List(first))
-    } else {
-      joinNodes(first, rest.accept(this))
-    }
-  }
-
-  override def visitSource(ctx: FunCParser.SourceContext): FcNode =
-    FcSource(
-      ctx.namespace().accept(this).asInstanceOf[FcNamespace],
-      ctx.include().asScala.toList.map(_.accept(this).asInstanceOf[FcInclude]),
-      ctx.body().asScala.toList.map(_.accept(this))
-    )
 
 }
