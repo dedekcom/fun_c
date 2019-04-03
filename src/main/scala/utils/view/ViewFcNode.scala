@@ -35,6 +35,9 @@ object ViewFcNode {
     val margin = " "
     val padding = margin * depth
 
+    def putBody(pad: String, typename: String, body: String): String = pad + "\"type\": \"" +
+      typename + (if(body.isEmpty) "\"" else "\",\n" + body)
+
     def extractFields: String = obj.getClass.getDeclaredFields.
       filterNot(_.getName.startsWith("$")).
       map { f =>
@@ -44,20 +47,26 @@ object ViewFcNode {
         else (Some(value), f.getName)
       }.filter(_._1.nonEmpty).
       map {
-      case (Some(l: List[_]), name) =>
-        val pad = margin * (depth + 1)
-        pad + "\"" + name + "\": [\n" + l.map(o => toJson(o, "", depth + 2)).mkString(",\n") + s"\n$pad]"
-      case (Some(n), name) => toJson(n, name, depth + 1)
-      case (None, _) => ""
+        case (Some(l: List[_]), name) =>
+          val pad = margin * (depth + 1)
+          pad + "\"" + name + "\": [\n" + l.map(o => toJson(o, "", depth + 2)).mkString(",\n") + s"\n$pad]"
+
+        case (Some(n), name) => toJson(n, name, depth + 1)
+
+        case (None, _) => ""
     }.mkString(",\n")
 
     obj match {
       case n: FcNode =>
         if (objName == "")
-          padding + "{\n" + extractFields + "\n" + padding + "}"
+          padding + "{\n" + putBody(padding + margin, n.caseClassName, extractFields) + "\n" + padding + "}"
         else
-          padding + "\"" + objName + "\": {\n" + extractFields + "\n" + padding + "}"
-      case _: Int | _: Double | _: Float => padding + "\"" + objName + "\": " + obj.toString
+          padding + "\"" + objName + "\": {\n" + putBody(padding + margin, n.caseClassName, extractFields) + "\n" + padding + "}"
+
+      case _: Int => padding + "\"" + objName + "\": " + obj.toString
+      case _: Float => padding + "\"" + objName + "\": " + obj.toString
+      case _: Double => padding + "\"" + objName + "\": " + obj.toString
+
       case rest => padding + "\"" + objName + "\": \"" + rest + "\""
     }
   }

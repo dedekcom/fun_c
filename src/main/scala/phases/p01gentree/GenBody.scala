@@ -29,4 +29,23 @@ trait GenBody {
       gotoBody(ctx.body())
     )
 
+  override def visitStatic_val(ctx: FunCParser.Static_valContext): FcNode = {
+    val declaredType = getId(ctx.declare_val().type_id().id())
+    val declaredName = getId(ctx.declare_val().id())
+    val assign = getExpr(ctx.declare_val().expression())
+    FcStaticVal(
+      ctx.extern() != null,
+      ctx.kwlazy() != null,
+      FcVal(declaredType, declaredName),
+      assign
+    )
+  }
+
+  override def visitDeclare_struct(ctx: FunCParser.Declare_structContext): FcNode =
+    FcStruct(
+      ctx.extern() != null,
+      getId(ctx.id()),
+      ctx.fun_single_args().accept(this).getAggregate.map(_.asInstanceOf[FcVal])
+    )
+
 }

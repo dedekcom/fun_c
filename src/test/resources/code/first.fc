@@ -4,6 +4,10 @@ namespace Test;
 include tmp.second.Second;
 include tmp.x.y;
 
+extern struct Element(Int posx, Int posy, String desc);
+
+struct Elem2(Int length, List elems);
+
 <?c
     int main() {
         return 0;

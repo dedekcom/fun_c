@@ -21,14 +21,4 @@ trait GenSource {
   override def visitH_namespace(ctx: FunCParser.H_namespaceContext): FcNode =
     FcNamespace(ctx.namespace_path().accept(this).getAggregate.map(_.asInstanceOf[FcId]))
 
-  override def visitNamespace_path(ctx: FunCParser.Namespace_pathContext): FcNode = {
-    val first = getId(ctx.id())
-    val rest = ctx.namespace_path()
-    if (rest == null) {
-      FcAggregate(List(first))
-    } else {
-      joinNodes(first, rest.accept(this))
-    }
-  }
-
 }
