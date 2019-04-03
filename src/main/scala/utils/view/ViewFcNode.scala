@@ -1,6 +1,6 @@
 package utils.view
 
-import parser.tree.FcNode
+import parser.tree.{FcCBlock, FcNode, TokenMeta}
 
 object ViewFcNode {
 
@@ -31,7 +31,7 @@ object ViewFcNode {
     }
   }
 
-  def toJson(obj: Any, objName: String, depth: Int): String = {
+  def toJson(obj: Any, objName: String = "", depth: Int = 0): String = {
     val margin = " "
     val padding = margin * depth
 
@@ -57,11 +57,26 @@ object ViewFcNode {
     }.mkString(",\n")
 
     obj match {
+      case b @ FcCBlock(block) =>
+        val pad = padding + margin
+        val lines = s"{\n$pad" + "\"type\": \"" + b.caseClassName + "\",\n" +
+          pad + "\"block\": [\n" +
+          block.replaceAllLiterally("\r\n", "\n").
+          split('\n').map(line => pad + margin + "\"" + line + "\"").
+          mkString(",\n") +
+          padding + "\n]\n" + padding + "}"
+        if (objName == "")
+          padding + lines
+        else
+          padding + "\"" + objName + "\": " + lines
+
       case n: FcNode =>
         if (objName == "")
           padding + "{\n" + putBody(padding + margin, n.caseClassName, extractFields) + "\n" + padding + "}"
         else
           padding + "\"" + objName + "\": {\n" + putBody(padding + margin, n.caseClassName, extractFields) + "\n" + padding + "}"
+
+      case TokenMeta(line, range) => padding + " \"" + objName + "\": " + s"[$line, ${range.start}, ${range.end}]"
 
       case _: Int => padding + "\"" + objName + "\": " + obj.toString
       case _: Float => padding + "\"" + objName + "\": " + obj.toString

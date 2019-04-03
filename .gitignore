@@ -7,3 +7,4 @@ src/main/java/fun_c/*
 
 src/test/resources/out/*.txt
 src/test/resources/out/*.c
+src/test/resources/out/*.json

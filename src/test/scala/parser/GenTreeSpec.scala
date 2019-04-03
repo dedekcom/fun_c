@@ -20,7 +20,7 @@ class GenTreeSpec extends FlatSpec with Matchers {
     println(code)
     println(tree.toString)
     println(ViewFcNode.treeString(tree, "first.fc", 0))
-    println(ViewFcNode.toJson(tree, "first", 0))
+    save("first.json", ViewFcNode.toJson(tree))
   }
 
 }
