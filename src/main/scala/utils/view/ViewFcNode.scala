@@ -27,6 +27,9 @@ object ViewFcNode {
       case n: FcNode =>
         val name = if (objName == "") "" else "." + objName
         s"$padding${n.caseClassName}$name:\n" + extractFields
+
+      case TokenMeta(line, range) => s"$padding$objName($line,${range.start},${range.end})\n"
+
       case rest => s"$padding$objName($rest)\n"
     }
   }
@@ -63,8 +66,7 @@ object ViewFcNode {
           pad + "\"block\": [\n" +
           block.replaceAllLiterally("\r\n", "\n").
           split('\n').map(line => pad + margin + "\"" + line + "\"").
-          mkString(",\n") +
-          padding + "\n]\n" + padding + "}"
+          mkString(",\n") + "\n" + pad + "]\n" + padding + "}"
         if (objName == "")
           padding + lines
         else
@@ -76,7 +78,7 @@ object ViewFcNode {
         else
           padding + "\"" + objName + "\": {\n" + putBody(padding + margin, n.caseClassName, extractFields) + "\n" + padding + "}"
 
-      case TokenMeta(line, range) => padding + " \"" + objName + "\": " + s"[$line, ${range.start}, ${range.end}]"
+      case TokenMeta(line, range) => padding + "\"" + objName + "\": " + s"[$line, ${range.start}, ${range.end}]"
 
       case _: Int => padding + "\"" + objName + "\": " + obj.toString
       case _: Float => padding + "\"" + objName + "\": " + obj.toString
