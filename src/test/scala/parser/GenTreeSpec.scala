@@ -17,9 +17,9 @@ class GenTreeSpec extends FlatSpec with Matchers {
   val code: String = parser.code
 
   it should "parse code" in {
-    println(code)
-    println(tree.toString)
-    println(ViewFcNode.treeString(tree, "first.fc", 0))
+    //println(code)
+    //println(tree.toString)
+    save("first.txt", ViewFcNode.treeString(tree, "first.fc", 0))
     save("first.json", ViewFcNode.toJson(tree))
   }
 

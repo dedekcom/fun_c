@@ -42,10 +42,16 @@ kwlazy: KW_LAZY;
 declare_val: type_id id '=' expression ';'
     ;
 
-declare_func: extern? type_id id '(' fun_args? ')' fun_block
+declare_func: extern? local_func
     ;
 
-declare_struct: extern? KW_STRUCT id '(' fun_single_args ')' ';'
+local_func: type_id id '(' fun_args? ')' fun_block
+    ;
+
+declare_struct: extern? local_struct
+    ;
+
+local_struct: KW_STRUCT id '(' fun_single_args ')' ';'
     ;
 
 fun_single_args: fun_single_arg
@@ -66,6 +72,8 @@ fun_block: '{' fun_body* '}'
 
 fun_body: expression
     | declare_val
+    | local_struct
+    | local_func
     ;
 
 expression: '(' expression ')'                          #ex_br
@@ -80,8 +88,8 @@ expression: '(' expression ')'                          #ex_br
     | expression op=('&'|'|') expression                #ex_bitand_ex
     | expression op=('&&'|'||') expression              #ex_and_ex
     | if_expr                                           #ex_if
-    | lambda_expr                                       #ex_lambda
     | match_expr                                        #ex_match
+    | lambda_expr                                       #ex_lambda
     ;
 
 match_expr: KW_MATCH '(' expression ')' '{' match_cases '}'
@@ -90,7 +98,7 @@ match_cases: match_case
     | match_case match_cases
     ;
 match_case:  any '=>' expr_block
-    | exp_list '=>' expr_block
+    | exp_list   '=>' expr_block
     ;
 
 lambda_expr: lambda_args '=>' expr_block

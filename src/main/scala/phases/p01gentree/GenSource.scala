@@ -16,9 +16,9 @@ trait GenSource {
     )
 
   override def visitInclude(ctx: FunCParser.IncludeContext): FcNode =
-    FcInclude(ctx.namespace_path().accept(this).getAggregate.map(_.asInstanceOf[FcId]))
+    FcInclude(namesPath(ctx.namespace_path()))
 
   override def visitH_namespace(ctx: FunCParser.H_namespaceContext): FcNode =
-    FcNamespace(ctx.namespace_path().accept(this).getAggregate.map(_.asInstanceOf[FcId]))
+    FcNamespace(namesPath(ctx.namespace_path()))
 
 }
