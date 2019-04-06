@@ -44,4 +44,12 @@ trait GenBody {
   override def visitDeclare_struct(ctx: FunCParser.Declare_structContext): FcNode =
     ctx.local_struct().accept(this).asInstanceOf[FcStruct].copy(isExtern = ctx.extern() != null)
 
+  override def visitLocal_struct(ctx: FunCParser.Local_structContext): FcNode =
+    FcStruct(
+      isExtern = false,
+      getId(ctx.id()),
+      ctx.fun_single_args().accept(this).getAggregate.map(_.asInstanceOf[FcVal])
+    )
+
+
 }
