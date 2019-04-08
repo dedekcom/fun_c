@@ -2,51 +2,37 @@ package phases.p01gentree
 
 import fun_c.FunCParser
 import parser.tree._
+import scala.collection.JavaConverters._
 
 trait GenBody {
   this: GenTreeVisitor =>
 
-  def gotoBody(ctx: FunCParser.BodyContext): List[FcBodyStatement] =
-    if (ctx == null) List[FcBodyStatement]()
-    else ctx.accept(this).getAggregate.map(_.asInstanceOf[FcBodyStatement])
+  def getBodyStatements(ctx: List[FunCParser.Body_statementContext]): List[FcBodyStatement] =
+    ctx.map(_.accept(this).asInstanceOf[FcBodyStatement])
 
   override def visitC_block(ctx: FunCParser.C_blockContext): FcNode =
     FcCBlock(ctx.C_BODY().getText)
 
-  override def visitBody(ctx: FunCParser.BodyContext): FcNode = {
-    val first = ctx.body_statement().accept(this)
-    val rest = ctx.body()
-    if (rest == null) {
-      FcAggregate(List(first))
-    } else {
-      joinNodes(first, rest.accept(this))
-    }
-  }
-
   override def visitLocal_namespace(ctx: FunCParser.Local_namespaceContext): FcNode =
     FcLocalNamespace(
       getId(ctx.id()),
-      gotoBody(ctx.body())
+      getBodyStatements(ctx.body_statement().asScala.toList)
     )
 
-  override def visitStatic_val(ctx: FunCParser.Static_valContext): FcNode = {
-    val declaredType = getId(ctx.declare_val().type_id().id())
-    val declaredName = getId(ctx.declare_val().id())
-    val assign = getExpr(ctx.declare_val().expression())
+  override def visitStatic_val(ctx: FunCParser.Static_valContext): FcNode =
     FcStaticVal(
       ctx.extern() != null,
-      ctx.kwlazy() != null,
-      FcVal(declaredType, declaredName),
-      assign
+      ctx.declare_val().accept(this).asInstanceOf[FcLocalVal]
     )
-  }
 
   override def visitDeclare_struct(ctx: FunCParser.Declare_structContext): FcNode =
-    ctx.local_struct().accept(this).asInstanceOf[FcStruct].copy(isExtern = ctx.extern() != null)
+    FcStruct(
+      ctx.extern() != null,
+      ctx.local_struct().accept(this).asInstanceOf[FcLocalStruct]
+    )
 
   override def visitLocal_struct(ctx: FunCParser.Local_structContext): FcNode =
-    FcStruct(
-      isExtern = false,
+    FcLocalStruct(
       getId(ctx.id()),
       ctx.fun_single_args().accept(this).getAggregate.map(_.asInstanceOf[FcVal])
     )

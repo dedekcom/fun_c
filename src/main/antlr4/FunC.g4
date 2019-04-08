@@ -6,7 +6,7 @@
 
 grammar FunC;
 
-source: h_namespace include* body? EOF
+source: h_namespace include* body_statement* EOF
     ;
 
 // header
@@ -18,10 +18,6 @@ namespace_path: id
     | id '.' namespace_path
     ;
 
-body: body_statement
-    | body_statement body
-    ;
-
 body_statement: c_block
     | local_namespace
     | static_val
@@ -29,17 +25,14 @@ body_statement: c_block
     | declare_struct
     ;
 
-local_namespace: KW_NAMESPACE id '{' body? '}'
+local_namespace: KW_NAMESPACE id '{' body_statement* '}'
     ;
 
-static_val: extern? kwlazy? declare_val
+static_val: extern? declare_val
     ;
 
-extern: KW_EXTERN;
 
-kwlazy: KW_LAZY;
-
-declare_val: type_id id '=' expression ';'
+declare_val: kwlazy? type_id id '=' expr_block
     ;
 
 declare_func: extern? local_func
@@ -70,7 +63,7 @@ fun_varargs: type_id '...' id;
 fun_block: '{' fun_body* '}'
     ;
 
-fun_body: expression
+fun_body: expr_block
     | declare_val
     | local_struct
     | local_func
@@ -87,9 +80,12 @@ expression: '(' expression ')'                          #ex_br
     | expression op=('=='|'!=') expression              #ex_eq_ex
     | expression op=('&'|'|') expression                #ex_bitand_ex
     | expression op=('&&'|'||') expression              #ex_and_ex
-    | if_expr                                           #ex_if
-    | match_expr                                        #ex_match
-    | lambda_expr                                       #ex_lambda
+    | complex_expr                                      #ex_complex
+    ;
+
+complex_expr: if_expr
+          | match_expr
+          | lambda_expr
     ;
 
 match_expr: KW_MATCH '(' expression ')' '{' match_cases '}'
@@ -117,8 +113,9 @@ if_expr: KW_IF '(' expression ')' expr_block else_part
 else_part: KW_ELSE expr_block
     ;
 
-expr_block: fun_block
+expr_block: complex_expr
     | expression ';'
+    | fun_block
     ;
 
 call_fun: namespace_path call_args
@@ -131,6 +128,10 @@ call_args: '(' exp_list? ')'
 exp_list: expression
     | expression ',' exp_list
     ;
+
+extern: KW_EXTERN;
+
+kwlazy: KW_LAZY;
 
 value: v_num
     | v_char

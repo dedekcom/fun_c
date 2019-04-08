@@ -62,10 +62,43 @@ trait GenExpr {
       getExpr(ctx.expression())
     )
 
-  override def visitEx_if(ctx: FunCParser.Ex_ifContext): FcNode = ctx.if_expr().accept(this)
+  def getExprBlock(ctx: FunCParser.Expr_blockContext): FcExprBlock = ctx.accept(this).asInstanceOf[FcExprBlock]
 
-  override def visitEx_lambda(ctx: FunCParser.Ex_lambdaContext): FcNode = ctx.lambda_expr().accept(this)
+  override def visitExpr_block(ctx: FunCParser.Expr_blockContext): FcNode = {
+    if (ctx.complex_expr() != null) FcExprBlock(List(ctx.complex_expr().accept(this).asInstanceOf[FcFunStatement]))
+    else if (ctx.expression() != null) FcExprBlock(List(ctx.expression().accept(this).asInstanceOf[FcFunStatement]))
+    else FcExprBlock(ctx.fun_block().accept(this).getAggregate.map(_.asInstanceOf[FcFunStatement]))
+  }
 
-  override def visitEx_match(ctx: FunCParser.Ex_matchContext): FcNode = ctx.match_expr().accept(this)
+  override def visitDeclare_val(ctx: FunCParser.Declare_valContext): FcNode = {
+    val declaredType = getId(ctx.type_id().id())
+    val declaredName = getId(ctx.id())
+    FcLocalVal(
+      ctx.kwlazy() != null,
+      FcVal(declaredType, declaredName),
+      getExprBlock(ctx.expr_block())
+    )
+  }
+
+  override def visitFun_body(ctx: FunCParser.Fun_bodyContext): FcNode = {
+    if (ctx.declare_val() != null) FcExprBlock(List(ctx.declare_val().accept(this).asInstanceOf[FcLocalVal]))
+    else if (ctx.local_func() != null) FcExprBlock(List(ctx.local_func().accept(this).asInstanceOf[FcLocalFunc]))
+    else if (ctx.local_struct() != null) FcExprBlock(List(ctx.local_struct().accept(this).asInstanceOf[FcLocalStruct]))
+    else getExprBlock(ctx.expr_block())
+  }
+
+  override def visitIf_expr(ctx: FunCParser.If_exprContext): FcNode =
+    FcIfExpr(
+      getExpr(ctx.expression()),
+      getExprBlock(ctx.expr_block()),
+      getExprBlock(ctx.else_part().expr_block())
+    )
+
+  override def visitEx_complex(ctx: FunCParser.Ex_complexContext): FcNode = ctx.complex_expr().accept(this)
+
+  override def visitComplex_expr(ctx: FunCParser.Complex_exprContext): FcNode =
+    if(ctx.if_expr() != null) ctx.if_expr().accept(this)
+    else if (ctx.lambda_expr() != null) ctx.lambda_expr().accept(this)
+    else ctx.match_expr().accept(this)
 
 }

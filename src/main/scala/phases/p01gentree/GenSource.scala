@@ -12,7 +12,7 @@ trait GenSource {
     FcSource(
       ctx.h_namespace().accept(this).asInstanceOf[FcNamespace],
       ctx.include().asScala.toList.map(_.accept(this).asInstanceOf[FcInclude]),
-      gotoBody(ctx.body())
+      getBodyStatements(ctx.body_statement().asScala.toList)
     )
 
   override def visitInclude(ctx: FunCParser.IncludeContext): FcNode =

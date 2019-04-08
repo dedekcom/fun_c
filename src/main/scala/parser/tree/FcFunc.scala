@@ -1,11 +1,15 @@
 package parser.tree
 
-case class FcFunc(isExtern: Boolean, args: List[FcVal], vargs: Option[FcVal], body: List[FcFunStatement]) extends FcBodyStatement
-
 sealed abstract class FcFunStatement extends FcNode { this: Product => }
 
-case class FcLocalVal(declare: FcVal, assign: FcExpr) extends FcFunStatement
+case class FcLocalFunc(ftype: FcId, name: FcId, args: List[FcVal],
+                  vargs: Option[FcVal], body: List[FcFunStatement]) extends FcFunStatement
 
+case class FcLocalVal(isLazy: Boolean, declare: FcVal, assign: FcExprBlock) extends FcFunStatement
+
+case class FcLocalStruct(id: FcId, vals: List[FcVal]) extends FcFunStatement
+
+case class FcExprBlock(block: List[FcFunStatement]) extends FcFunStatement
 
 sealed abstract class FcExpr extends FcFunStatement { this: Product => }
 
@@ -19,7 +23,7 @@ case class FcPrefixExpr(pref: String, expr: FcExpr) extends FcExpr
 
 case class FcExprOpExpr(exp1: FcExpr, op: String, exp2: FcExpr) extends FcExpr
 
-case class FcIfExpr(ifexp: FcExpr, elsexp: FcExpr) extends FcExpr
+case class FcIfExpr(condition: FcExpr, ifexp: FcExprBlock, elsexp: FcExprBlock) extends FcExpr
 
 
 case class FcLambda(args: List[FcLambdaArg], body: List[FcFunStatement]) extends FcExpr

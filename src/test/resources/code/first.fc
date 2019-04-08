@@ -12,6 +12,23 @@ extern struct Element(Int posx, Int posy, String desc);
 
 struct Elem2(Int length, List elems);
 
+
+namespace Args {
+    extern Int Height = 10;
+    String name = "test prog";
+    extern Int Width = {
+            if (Height > 0)
+                5;
+            else {
+                Int x = 15;
+                15 + x;
+            }
+            }
+    extern Int Width2 = { 10; }
+    String name = "test prog";
+}
+
+
 <?c
     int main() {
         return 0;

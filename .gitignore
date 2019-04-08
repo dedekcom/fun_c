@@ -3,6 +3,8 @@ project/target/*
 project/project/*
 .idea/*
 
+gen/*
+
 src/main/java/fun_c/*
 
 src/test/resources/out/*.txt

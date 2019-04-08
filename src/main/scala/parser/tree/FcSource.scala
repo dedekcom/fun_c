@@ -13,6 +13,8 @@ case class FcLocalNamespace(name: FcId, body: List[FcNode]) extends FcBodyStatem
 
 case class FcCBlock(block: String)                          extends FcBodyStatement
 
-case class FcStaticVal(isExtern: Boolean, isLazy: Boolean, value: FcVal, assign: FcExpr) extends FcBodyStatement
+case class FcStaticVal(isExtern: Boolean, declaredVal: FcLocalVal) extends FcBodyStatement
 
-case class FcStruct(isExtern: Boolean, id: FcId, vals: List[FcVal]) extends FcBodyStatement
+case class FcStruct(isExtern: Boolean, declaredStruct: FcLocalStruct) extends FcBodyStatement
+
+case class FcFunc(isExtern: Boolean, declaredFunc: FcLocalFunc) extends FcBodyStatement
