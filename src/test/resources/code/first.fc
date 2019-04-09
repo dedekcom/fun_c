@@ -28,6 +28,20 @@ namespace Args {
     String name = "test prog";
 }
 
+Int sumStrange(Int n) {
+    Int sum(Int nn, Int acc) {
+        match (nn) {
+            0 => acc;
+            1,2 => {
+                Int x = 2 * nn;
+                isum(nn-1, acc + x);
+                }
+            _ => isum(nn-1, acc+nn);
+        }
+    }
+    sum(10, 0);
+}
+
 
 <?c
     int main() {

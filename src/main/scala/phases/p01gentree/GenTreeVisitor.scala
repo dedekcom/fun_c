@@ -3,7 +3,8 @@ package phases.p01gentree
 import fun_c.{FunCBaseVisitor, FunCParser}
 import parser.tree._
 
-class GenTreeVisitor extends FunCBaseVisitor[FcNode] with GenBody with GenVals with GenSource with GenExpr with GenFun {
+class GenTreeVisitor extends FunCBaseVisitor[FcNode] with GenBody with GenVals with GenSource with GenExpr
+  with GenFun with GenComplexExpr {
 
   def joinNodes(first: FcNode, rest: FcNode): FcNode = FcAggregate(first :: rest.asInstanceOf[FcAggregate].nodes)
 
@@ -31,6 +32,5 @@ class GenTreeVisitor extends FunCBaseVisitor[FcNode] with GenBody with GenVals w
 
   override def visitFun_single_arg(ctx: FunCParser.Fun_single_argContext): FcNode = FcVal(getId(ctx.type_id().id()), getId(ctx.id()))
 
-  // TODO: match, lambda
-
+  // TODO: type parameters
 }

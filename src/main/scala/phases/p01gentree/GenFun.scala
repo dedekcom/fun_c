@@ -33,4 +33,22 @@ trait GenFun {
   override def visitDeclare_func(ctx: FunCParser.Declare_funcContext): FcNode = FcFunc(ctx.extern() != null, declareFunc(ctx.local_func()))
 
   override def visitLocal_func(ctx: FunCParser.Local_funcContext): FcNode = declareFunc(ctx)
+
+  override def visitDeclare_val(ctx: FunCParser.Declare_valContext): FcNode = {
+    val declaredType = getId(ctx.type_id().id())
+    val declaredName = getId(ctx.id())
+    FcLocalVal(
+      ctx.kwlazy() != null,
+      FcVal(declaredType, declaredName),
+      getExprBlock(ctx.expr_block())
+    )
+  }
+
+  override def visitFun_body(ctx: FunCParser.Fun_bodyContext): FcNode = {
+    if (ctx.declare_val() != null) FcExprBlock(List(ctx.declare_val().accept(this).asInstanceOf[FcLocalVal]))
+    else if (ctx.local_func() != null) FcExprBlock(List(ctx.local_func().accept(this).asInstanceOf[FcLocalFunc]))
+    else if (ctx.local_struct() != null) FcExprBlock(List(ctx.local_struct().accept(this).asInstanceOf[FcLocalStruct]))
+    else getExprBlock(ctx.expr_block())
+  }
+
 }

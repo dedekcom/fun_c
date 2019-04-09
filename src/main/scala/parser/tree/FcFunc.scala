@@ -26,11 +26,13 @@ case class FcExprOpExpr(exp1: FcExpr, op: String, exp2: FcExpr) extends FcExpr
 case class FcIfExpr(condition: FcExpr, ifexp: FcExprBlock, elsexp: FcExprBlock) extends FcExpr
 
 
-case class FcLambda(args: List[FcLambdaArg], body: List[FcFunStatement]) extends FcExpr
+case class FcLambda(args: List[FcLambdaArg], body: FcExprBlock) extends FcExpr
 sealed abstract class FcLambdaArg extends FcNode { this: Product => }
 case class FcLambdaArgId(id: FcId) extends FcLambdaArg
 case object FcLambdaArgAny extends FcLambdaArg
 
 
-case class FcMatch(cases: List[FcCase]) extends FcExpr
-case class FcCase(patterns: List[FcExpr], result: FcExpr) extends FcNode
+case class FcMatch(expr: FcExpr, cases: List[FcCase]) extends FcExpr
+sealed abstract class FcCase extends FcNode { this: Product => }
+case class FcCasePat(patterns: List[FcExpr], result: FcExprBlock) extends FcCase
+case class FcCaseAny(result: FcExprBlock) extends FcCase

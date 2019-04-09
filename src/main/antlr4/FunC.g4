@@ -104,8 +104,11 @@ lambda_args: id
     | '(' lambda_args2? ')'
     ;
 
-lambda_args2: id
-    | id ',' lambda_args2
+lambda_args2: lambda_arg
+    | lambda_arg ',' lambda_args2
+    ;
+lambda_arg: any
+    | id
     ;
 
 if_expr: KW_IF '(' expression ')' expr_block else_part
