@@ -33,7 +33,7 @@ Int sumStrange(Int n) {
         match (nn) {
             0 => acc;
             1,2 => {
-                Int x = 2 * nn;
+                Int x = Second.mul(2, nn);
                 isum(nn-1, acc + x);
                 }
             _ => isum(nn-1, acc+nn);

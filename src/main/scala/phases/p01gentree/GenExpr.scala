@@ -13,14 +13,23 @@ trait GenExpr {
 
   override def visitEx_val(ctx: FunCParser.Ex_valContext): FcNode = FcValue(ctx.value().accept(this).asInstanceOf[FcLiteral])
 
-  override def visitEx_fun(ctx: FunCParser.Ex_funContext): FcNode = {
-    val args = ctx.call_fun().call_args()
+  override def visitEx_fun(ctx: FunCParser.Ex_funContext): FcNode = ctx.call_fun().accept(this)
+
+  override def visitCall_fun(ctx: FunCParser.Call_funContext): FcNode = {
+    val args = ctx.call_args()
     if (args == null) {
-      FcGetVal(namesPath(ctx.call_fun().namespace_path()))
+      FcGetVal(namesPath(ctx.namespace_path()))
     } else
       FcCallFun(
-        namesPath(ctx.call_fun().namespace_path()),
-        args.exp_list().accept(this).getAggregate.map(_.asInstanceOf[FcExpr])
+        namesPath(ctx.namespace_path()),
+        if (args.exp_list() == null)
+          List[FcExpr]()
+        else
+          args.exp_list().accept(this).getAggregate.map(_.asInstanceOf[FcExpr]),
+        if (ctx.call_fun() == null)
+          Option.empty[FcCallFun]
+        else
+          Some(ctx.call_fun().accept(this).asInstanceOf[FcCallFun])
       )
   }
 

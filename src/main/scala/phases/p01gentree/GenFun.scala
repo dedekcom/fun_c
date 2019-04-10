@@ -7,6 +7,8 @@ import scala.collection.JavaConverters._
 trait GenFun {
   this: GenTreeVisitor =>
 
+  def getType(ctx: FunCParser.Type_idContext): FcType = ctx.accept(this).asInstanceOf[FcType]
+
   def declareFunc(ctx: FunCParser.Local_funcContext): FcLocalFunc = {
     val (fargs, fvarargs) = if (ctx.fun_args() == null) (List[FcVal](), Option.empty[FcVal])
     else {
@@ -19,13 +21,19 @@ trait GenFun {
       (fa, fv)
     }
     FcLocalFunc(
-      getId(ctx.type_id().id()),
+      getType(ctx.type_id()),
       getId(ctx.id()),
       fargs,
       fvarargs,
       ctx.fun_block().accept(this).getAggregate.map(_.asInstanceOf[FcFunStatement])
     )
   }
+
+  override def visitTyp_id(ctx: FunCParser.Typ_idContext): FcNode =
+    FcType(getId(ctx.id()), None)
+
+  override def visitTyp_templ(ctx: FunCParser.Typ_templContext): FcNode =
+    FcType(getId(ctx.id()), Some(getType(ctx.type_id())))
 
   override def visitFun_block(ctx: FunCParser.Fun_blockContext): FcNode =
     FcAggregate(ctx.fun_body().asScala.toList.map(_.accept(this).asInstanceOf[FcFunStatement]))
@@ -35,7 +43,7 @@ trait GenFun {
   override def visitLocal_func(ctx: FunCParser.Local_funcContext): FcNode = declareFunc(ctx)
 
   override def visitDeclare_val(ctx: FunCParser.Declare_valContext): FcNode = {
-    val declaredType = getId(ctx.type_id().id())
+    val declaredType = getType(ctx.type_id())
     val declaredName = getId(ctx.id())
     FcLocalVal(
       ctx.kwlazy() != null,

@@ -1,0 +1,53 @@
+
+namespace libs.Program;
+
+include libs.net.Http;
+
+struct Element(Int posx, Int posy, string desc);
+
+struct Elem2(Int length, List<Element> elems);
+
+namespace Args {
+    extern Int Height = 10;
+    extern Int Width = {if (Height > 0) 5; else 15;}
+    string name = "test prog";
+}
+
+Int fun1(List<Int> list) {
+    Element elem = list.filter(x => x > 0;).map((x) => {x/2;}).reduce(Element(0, 0, ""),
+        (acc, next) => {
+            if (next % 2) {
+                Element(acc.posx + 1, acc.posy, acc.desc);
+            } else {
+                Element(acc.posx, acc.posy + 1, acc.desc);
+            }
+        });
+    elem.posx - elem.posy;
+}
+
+extern List<Int> fun2(List<Int> list, Int num) {
+    match (num) {
+        0       => list;
+        1, 2    => fun2(0 :: list, num - 1);
+        _       => fun2(num :: list, num - 1);
+    }
+}
+
+Array<Float> fun3(List<Int> list) {
+    list.map(x => Float(x);).toArray();
+}
+
+Int run() {
+    Int res = Http.get(Http.Headers.Get, "www.test.pl");
+    fun1(List.of(1, 2, 5, -2, 3, 5, 7, 8, -3)) +
+    fun2(List.Nil, 10).reduce(0, (acc, next) => acc + next;);
+}
+
+String hello() { "hello world\n"; }
+
+<?c
+    Int main(Int argc, char *argv) {
+        prIntf(hello());
+        return 0;
+    }
+?>

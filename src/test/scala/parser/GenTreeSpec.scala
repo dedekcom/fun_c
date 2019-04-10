@@ -12,15 +12,24 @@ class GenTreeSpec extends FlatSpec with Matchers {
   def save(file: String, content: String): Unit =
     Files.write(Paths.get("src/test/resources/out/" + file), content.getBytes(StandardCharsets.US_ASCII))
 
-  val parser: Parser = Parser.fromFile("src/test/resources/code/first.fc")
-  val tree: FcSource = parser.tree
-  val code: String = parser.code
+  val code1 = load("first.fc")
+  val code2 = load("third.fc")
+
+  case class TestCode(tree: FcSource, code: String)
 
   it should "parse code" in {
     //println(code)
     //println(tree.toString)
-    save("first.txt", ViewFcNode.treeString(tree, "first.fc", 0))
-    save("first.json", ViewFcNode.toJson(tree))
+    save("first.txt", ViewFcNode.treeString(code1.tree, "first.fc", 0))
+    save("first.json", ViewFcNode.toJson(code1.tree))
+    save("second.json", ViewFcNode.toJson(code2.tree))
+  }
+
+  def load(filename: String): TestCode = {
+    val parser: Parser = Parser.fromFile("src/test/resources/code/" + filename)
+    val tree: FcSource = parser.tree
+    val code: String = parser.code
+    TestCode(tree, code)
   }
 
 }

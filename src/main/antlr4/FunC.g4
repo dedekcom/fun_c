@@ -75,7 +75,7 @@ expression: '(' expression ')'                          #ex_br
     | prefix=('+'|'-') expression                       #ex_neg_ex
     | prefix=('~'|'!') expression                       #ex_not_ex
     | expression op=('*'|'/'|'%') expression            #ex_mul_ex
-    | expression op=('+'|'-') expression                #ex_plus_ex
+    | expression op=('+'|'-'|'::') expression           #ex_plus_ex
     | expression op=('<'|'>'|'<='|'>=') expression      #ex_gt_ex
     | expression op=('=='|'!=') expression              #ex_eq_ex
     | expression op=('&'|'|') expression                #ex_bitand_ex
@@ -121,7 +121,7 @@ expr_block: complex_expr
     | fun_block
     ;
 
-call_fun: namespace_path call_args
+call_fun: namespace_path call_args ('.' call_fun)?
     | namespace_path
     ;
 
@@ -145,7 +145,9 @@ value: v_num
 
 c_block: C_BODY
     ;
-type_id: id;
+type_id: id                 #typ_id
+    | id '<' type_id '>'    #typ_templ
+    ;
 
 id: ID;
 any: UNDERSCORE;
@@ -154,7 +156,7 @@ v_num: NUM;
 v_float: FLOAT;
 v_null: 'null';
 v_char: CHAR;
-v_str: STR;
+v_str: StringLiteral;
 
 C_BODY: '<?c' .*? '?>';
 
@@ -191,15 +193,15 @@ fragment ANYCHAR:	~['\\\r\n]
 fragment ESC_DQUOTE: '\\"'
   ;
 
-STR
-  : '"'
-      ( ~('"' | '\n' | '\\')
-      | ESC_DQUOTE
-      | '\n'
-      )*
-    '"' // "
-  ;
-
+StringLiteral:	'"' StringCharacters? '"'
+  	;
+fragment StringCharacters:	StringCharacter+
+  	;
+fragment StringCharacter:	~["\\\r\n]
+  	|	EscapeSequence
+  	;
+fragment EscapeSequence:	'\\' [btnfr"'\\]
+	;
 //
 // Whitespace and comments
 //

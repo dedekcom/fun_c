@@ -1,2 +1,7 @@
 
 namespace Second;
+
+Float sum(Float a, Float b) { a + b; }
+
+Float mul(Float a, Float b) { a * b; }
+

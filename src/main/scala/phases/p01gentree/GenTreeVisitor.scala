@@ -30,7 +30,7 @@ class GenTreeVisitor extends FunCBaseVisitor[FcNode] with GenBody with GenVals w
     }
   }
 
-  override def visitFun_single_arg(ctx: FunCParser.Fun_single_argContext): FcNode = FcVal(getId(ctx.type_id().id()), getId(ctx.id()))
+  override def visitFun_single_arg(ctx: FunCParser.Fun_single_argContext): FcNode =
+    FcVal(getType(ctx.type_id()), getId(ctx.id()))
 
-  // TODO: type parameters
 }

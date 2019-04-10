@@ -68,6 +68,6 @@ trait GenComplexExpr {
 
   override def visitLambda_arg(ctx: FunCParser.Lambda_argContext): FcNode =
     if(ctx.any() != null) FcLambdaArgAny
-    else getId(ctx.id())
+    else FcLambdaArgId(getId(ctx.id()))
 
 }

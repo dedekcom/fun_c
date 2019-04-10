@@ -13,7 +13,9 @@ case class FcAggregate(nodes: List[FcNode]) extends FcNode {
 
 case class FcId(id: String, meta: TokenMeta)  extends FcNode
 
-case class FcVal(vtype: FcId, name: FcId)     extends FcNode
+case class FcType(id: FcId, param: Option[FcType]) extends FcNode
+
+case class FcVal(vtype: FcType, name: FcId)     extends FcNode
 
 abstract class FcLiteral extends FcNode { this: Product => }
 case class FcNum(num: String)                 extends FcLiteral
