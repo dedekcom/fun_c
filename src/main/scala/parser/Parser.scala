@@ -3,12 +3,12 @@ package parser
 import org.antlr.v4.runtime.{CharStreams, CommonTokenStream}
 import fun_c._
 import parser.tree.FcSource
-import phases.p01gentree.GenTreeVisitor
+import phases.p02gentree.GenTreeVisitor
 import utils.io.FileUtil
 
 object Parser {
 
-  def fromFile(inputRdl: String): Parser = new Parser(FileUtil.load(inputRdl))
+  def fromFile(filename: String): Parser = new Parser(FileUtil.load(filename))
 
   def apply(code: String): Parser = new Parser(code)
 

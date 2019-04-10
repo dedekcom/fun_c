@@ -1,0 +1,5 @@
+
+namespace Main;
+
+include a.a.A;
+include a.b.B;

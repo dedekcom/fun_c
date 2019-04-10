@@ -1,5 +1,5 @@
 
-namespace Test;
+namespace Main;
 
 include tmp.second.Second;
 include tmp.x.y;

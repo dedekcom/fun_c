@@ -1,0 +1,5 @@
+
+namespace B;
+
+include a.a.A;
+

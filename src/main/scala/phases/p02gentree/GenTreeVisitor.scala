@@ -1,4 +1,4 @@
-package phases.p01gentree
+package phases.p02gentree
 
 import fun_c.{FunCBaseVisitor, FunCParser}
 import parser.tree._

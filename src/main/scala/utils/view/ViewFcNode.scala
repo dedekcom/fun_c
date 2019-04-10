@@ -49,11 +49,12 @@ object ViewFcNode {
         if (value == null) (None, "")
         else (Some(value), f.getName)
       }.filter(_._1.nonEmpty).
-      map { x => x match {
+      map {
         case p @ (Some(_: List[_] | _: Option[_]), name) =>
           val l = p._1 match {
             case Some(ll: List[_]) => ll
             case Some(oo: Option[_]) => oo.toList
+            case _ => List()
           }
           val pad = margin * (depth + 1)
           pad + "\"" + name + "\": [\n" + l.map(o => toJson(o, "", depth + 2)).mkString(",\n") + s"\n$pad]"
@@ -61,7 +62,7 @@ object ViewFcNode {
         case (Some(n), name) => toJson(n, name, depth + 1)
 
         case (None, _) => ""
-    }}.mkString(",\n")
+    }.mkString(",\n")
 
     obj match {
       case b @ FcCBlock(block) =>

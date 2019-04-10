@@ -4,7 +4,10 @@ case class FcSource(namespace: FcNamespace, includes: List[FcInclude], body: Lis
 
 case class FcNamespace(path: List[FcId]) extends FcNode
 
-case class FcInclude(path: List[FcId]) extends FcNode
+case class FcInclude(path: List[FcId]) extends FcNode {
+  def fullNamespace: String = path.map(_.id).mkString(".")
+  def namespace: String = path.last.id
+}
 
 
 abstract class FcBodyStatement extends FcNode { this: Product => }
