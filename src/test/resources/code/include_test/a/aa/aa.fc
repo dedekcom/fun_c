@@ -1,2 +1,4 @@
 
 namespace AA;
+
+include main.Main;

@@ -79,4 +79,8 @@ trait GenExpr {
     else FcExprBlock(ctx.fun_block().accept(this).getAggregate.map(_.asInstanceOf[FcFunStatement]))
   }
 
+  override def visitLambda_block(ctx: FunCParser.Lambda_blockContext): FcNode =
+    if (ctx.expression() != null) FcExprBlock(List(ctx.expression().accept(this).asInstanceOf[FcFunStatement]))
+    else FcExprBlock(ctx.fun_block().accept(this).getAggregate.map(_.asInstanceOf[FcFunStatement]))
+
 }

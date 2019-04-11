@@ -14,7 +14,7 @@ namespace Args {
 }
 
 Int fun1(List<Int> list) {
-    Element elem = list.filter(x => x > 0;).map((x) => {x/2;}).reduce(Element(0, 0, ""),
+    Element elem = list.filter(x => x > 0).map((x) => {x/2;}).reduce(Element(0, 0, ""),
         (acc, next) => {
             if (next % 2) {
                 Element(acc.posx + 1, acc.posy, acc.desc);
@@ -34,13 +34,13 @@ extern List<Int> fun2(List<Int> list, Int num) {
 }
 
 Array<Float> fun3(List<Int> list) {
-    list.map(x => Float(x);).toArray();
+    list.map(x => Float(x)).toArray();
 }
 
 Int run() {
     Int res = Http.get(Http.Headers.Get, "www.test.pl");
     fun1(List.of(1, 2, 5, -2, 3, 5, 7, 8, -3)) +
-    fun2(List.Nil, 10).reduce(0, (acc, next) => acc + next;);
+    fun2(List.Nil, 10).reduce(0, (acc, next) => acc + next);
 }
 
 String hello() { "hello world\n"; }

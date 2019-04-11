@@ -48,7 +48,7 @@ trait GenComplexExpr {
   override def visitLambda_expr(ctx: FunCParser.Lambda_exprContext): FcNode =
     FcLambda(
       ctx.lambda_args().accept(this).getAggregate.map(_.asInstanceOf[FcLambdaArg]),
-      getExprBlock(ctx.expr_block())
+      ctx.lambda_block().accept(this).asInstanceOf[FcExprBlock]
     )
 
   override def visitLambda_args(ctx: FunCParser.Lambda_argsContext): FcNode =

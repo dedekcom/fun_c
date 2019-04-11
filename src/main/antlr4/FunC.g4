@@ -97,7 +97,7 @@ match_case:  any '=>' expr_block
     | exp_list   '=>' expr_block
     ;
 
-lambda_expr: lambda_args '=>' expr_block
+lambda_expr: lambda_args '=>' lambda_block
     ;
 
 lambda_args: id
@@ -118,6 +118,10 @@ else_part: KW_ELSE expr_block
 
 expr_block: complex_expr
     | expression ';'
+    | fun_block
+    ;
+
+lambda_block: expression
     | fun_block
     ;
 
