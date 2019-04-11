@@ -19,6 +19,10 @@ trait GenSource {
     FcInclude(namesPath(ctx.namespace_path()))
 
   override def visitH_namespace(ctx: FunCParser.H_namespaceContext): FcNode =
-    FcNamespace(namesPath(ctx.namespace_path()))
+    FcNamespace(
+      namesPath(ctx.namespace_path()),
+      if (ctx.id() == null) None
+      else Some(getId(ctx.id()))
+    )
 
 }

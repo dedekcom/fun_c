@@ -10,10 +10,12 @@ source: h_namespace include* body_statement* EOF
     ;
 
 // header
-h_namespace: KW_NAMESPACE namespace_path ';'
+h_namespace: KW_NAMESPACE namespace_path (KW_AS id)?';'
     ;
+
 include: KW_INCLUDE namespace_path ';'
     ;
+
 namespace_path: id
     | id '.' namespace_path
     ;
@@ -174,6 +176,7 @@ KW_MATCH: 'match';
 KW_EXTERN: 'extern';
 KW_LAZY: 'lazy';
 KW_STRUCT: 'struct';
+KW_AS: 'as';
 
 UNDERSCORE: '_';
 

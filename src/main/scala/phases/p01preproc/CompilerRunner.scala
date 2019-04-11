@@ -21,12 +21,12 @@ class CompilerRunner(prjPath: String, mainFile: String) {
         case (result, None) => result
 
         case (result, Some(parser)) =>
+
           parser.tree.includes.foldLeft(result) {
-            case (nspcs, in @ FcInclude(ns)) =>
-              if (ns.length < 2)
-                throw CompileException(ErrorIncludeTooShort(ns.head))
-              val file = ns.dropRight(1).map(_.id).mkString("/") + ".fc"
-              loop(file, in.fullNamespace, nspcs)
+            case (nspcs, include: FcInclude) =>
+              if (include.path.length < 2)
+                throw CompileException(ErrorIncludeTooShort(include.path.head))
+              loop(include.getFile, include.fullNamespace, nspcs)
           }
       }
     }
