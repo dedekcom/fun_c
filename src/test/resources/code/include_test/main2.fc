@@ -1,0 +1,4 @@
+
+namespace Main;
+
+include a.non_existing_namespace;

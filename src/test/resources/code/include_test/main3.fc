@@ -1,0 +1,4 @@
+
+namespace Main;
+
+include wrong_namespace;    // must be at last 2 names
