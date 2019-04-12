@@ -1,7 +1,7 @@
 package phases.p02gentree
 
 import fun_c.FunCParser
-import parser.tree._
+import model.tree._
 import scala.collection.JavaConverters._
 
 trait GenBody {

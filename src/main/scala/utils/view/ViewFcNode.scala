@@ -1,6 +1,6 @@
 package utils.view
 
-import parser.tree.{FcCBlock, FcNode, TokenMeta}
+import model.tree.{FcCBlock, FcNode, TokenMeta}
 
 object ViewFcNode {
 

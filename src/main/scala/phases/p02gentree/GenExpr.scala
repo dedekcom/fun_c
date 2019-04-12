@@ -2,7 +2,7 @@ package phases.p02gentree
 
 import fun_c.FunCParser
 import org.antlr.v4.runtime.ParserRuleContext
-import parser.tree._
+import model.tree._
 
 trait GenExpr {
   this: GenTreeVisitor =>

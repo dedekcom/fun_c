@@ -2,8 +2,8 @@ package compiler
 
 import org.scalatest.{FlatSpec, Matchers}
 import out.messages._
-import parser.tree._
-import parser.tree.TokenMeta.EmptyToken
+import model.tree._
+import model.tree.TokenMeta.EmptyToken
 import phases.p01preproc.CompilerRunner
 
 class PreprocSpec extends FlatSpec with Matchers {

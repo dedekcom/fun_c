@@ -1,4 +1,4 @@
-package parser.tree
+package model.tree
 
 sealed abstract class FcFunStatement extends FcNode { this: Product => }
 

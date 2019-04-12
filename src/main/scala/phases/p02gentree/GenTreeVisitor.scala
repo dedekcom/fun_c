@@ -1,7 +1,7 @@
 package phases.p02gentree
 
 import fun_c.{FunCBaseVisitor, FunCParser}
-import parser.tree._
+import model.tree._
 
 class GenTreeVisitor extends FunCBaseVisitor[FcNode] with GenBody with GenVals with GenSource with GenExpr
   with GenFun with GenComplexExpr {

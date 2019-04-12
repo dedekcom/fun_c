@@ -1,8 +1,8 @@
-package parser
+package utils
 
-import org.antlr.v4.runtime.{CharStreams, CommonTokenStream}
 import fun_c._
-import parser.tree.FcSource
+import org.antlr.v4.runtime.{CharStreams, CommonTokenStream}
+import model.tree.FcSource
 import phases.p02gentree.GenTreeVisitor
 import utils.io.FileUtil
 

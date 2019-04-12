@@ -1,4 +1,4 @@
-package parser.tree
+package model.tree
 
 case class FcSource(namespace: FcNamespace, includes: List[FcInclude], body: List[FcBodyStatement]) extends FcNode
 

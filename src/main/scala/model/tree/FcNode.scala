@@ -1,4 +1,4 @@
-package parser.tree
+package model.tree
 
 abstract class FcNode {
   this: Product =>

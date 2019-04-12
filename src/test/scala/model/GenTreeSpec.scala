@@ -1,10 +1,11 @@
-package parser
+package model
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
 
 import org.scalatest.{FlatSpec, Matchers}
-import parser.tree._
+import model.tree._
+import utils.Parser
 import utils.view.ViewFcNode
 
 class GenTreeSpec extends FlatSpec with Matchers {

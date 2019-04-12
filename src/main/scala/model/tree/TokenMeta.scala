@@ -1,4 +1,4 @@
-package parser.tree
+package model.tree
 
 import org.antlr.v4.runtime.ParserRuleContext
 

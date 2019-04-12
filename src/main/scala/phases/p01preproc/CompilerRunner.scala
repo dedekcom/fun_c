@@ -2,8 +2,8 @@ package phases.p01preproc
 
 import CompilerRunner._
 import out.messages.{CompileException, ErrorIncludeTooShort, ErrorNamespaceWrongName}
-import parser.Parser
-import parser.tree._
+import model.tree._
+import utils.Parser
 
 object CompilerRunner {
 
