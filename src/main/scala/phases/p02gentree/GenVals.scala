@@ -5,10 +5,11 @@ import model.tree._
 
 trait GenVals {
   this: GenTreeVisitor =>
+  val codePathFile: String
 
   def getId(ctx: FunCParser.IdContext): FcId = ctx.accept(this).asInstanceOf[FcId]
 
-  override def visitId(ctx: FunCParser.IdContext): FcNode = FcId(ctx.getText, TokenMeta(ctx))
+  override def visitId(ctx: FunCParser.IdContext): FcNode = FcId(ctx.getText, TokenMeta(codePathFile, ctx))
 
   override def visitV_char(ctx: FunCParser.V_charContext): FcNode = FcChar(ctx.getText.charAt(1))
 

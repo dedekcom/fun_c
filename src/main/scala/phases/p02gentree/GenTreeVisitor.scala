@@ -3,7 +3,7 @@ package phases.p02gentree
 import fun_c.{FunCBaseVisitor, FunCParser}
 import model.tree._
 
-class GenTreeVisitor extends FunCBaseVisitor[FcNode] with GenBody with GenVals with GenSource with GenExpr
+class GenTreeVisitor(val codePathFile: String) extends FunCBaseVisitor[FcNode] with GenBody with GenVals with GenSource with GenExpr
   with GenFun with GenComplexExpr {
 
   def joinNodes(first: FcNode, rest: FcNode): FcNode = FcAggregate(first :: rest.asInstanceOf[FcAggregate].nodes)

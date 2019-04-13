@@ -8,18 +8,16 @@ import utils.io.FileUtil
 
 object Parser {
 
-  def fromFile(filename: String): Parser = new Parser(FileUtil.load(filename))
-
-  def apply(code: String): Parser = new Parser(code)
+  def fromFile(filename: String): Parser = new Parser(filename, FileUtil.load(filename))
 
 }
 
-class Parser(val code: String) {
+class Parser(val filename: String, val code: String) {
 
   val lexer             = new FunCLexer(CharStreams.fromString(code))
   val commonTokenStream = new CommonTokenStream(lexer)
   val parser            = new FunCParser(commonTokenStream)
-  val visitor           = new GenTreeVisitor()
+  val visitor           = new GenTreeVisitor(filename)
   val tree: FcSource    = visitor.visit(parser.source()).asInstanceOf[FcSource]
 
 }

@@ -28,7 +28,7 @@ object ViewFcNode {
         val name = if (objName == "") "" else "." + objName
         s"$padding${n.caseClassName}$name:\n" + extractFields
 
-      case TokenMeta(line, range) => s"$padding$objName($line,${range.start},${range.end})\n"
+      case TokenMeta(_, line, range) => s"$padding$objName($line,${range.start},${range.end})\n"
 
       case rest => s"$padding$objName($rest)\n"
     }
@@ -83,7 +83,8 @@ object ViewFcNode {
         else
           padding + "\"" + objName + "\": {\n" + putBody(padding + margin, n.caseClassName, extractFields) + "\n" + padding + "}"
 
-      case TokenMeta(line, range) => padding + "\"" + objName + "\": " + s"[$line, ${range.start}, ${range.end}]"
+      case TokenMeta(filename, line, range) => padding + "\"" + objName + "\": " + "[\"" + filename +
+        "\"" + s", $line, ${range.start}, ${range.end}]"
 
       case _: Int => padding + "\"" + objName + "\": " + obj.toString
       case _: Float => padding + "\"" + objName + "\": " + obj.toString
