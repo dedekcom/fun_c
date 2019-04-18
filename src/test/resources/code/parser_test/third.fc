@@ -46,8 +46,8 @@ Int run() {
 String hello() { "hello world\n"; }
 
 <?c
-    Int main(Int argc, char *argv) {
-        prIntf(hello());
+    int main(int argc, char *argv) {
+        printf(Main_hello());
         return 0;
     }
 ?>

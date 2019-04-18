@@ -147,6 +147,7 @@ value: v_num
     | v_str
     | v_null
     | v_float
+    | v_bool
     ;
 
 c_block: C_BODY
@@ -160,9 +161,10 @@ any: UNDERSCORE;
 
 v_num: NUM;
 v_float: FLOAT;
-v_null: 'null';
+v_null: NULL;
 v_char: CHAR;
 v_str: StringLiteral;
+v_bool: BOOL;
 
 C_BODY: '<?c' .*? '?>';
 
@@ -179,6 +181,13 @@ KW_STRUCT: 'struct';
 KW_AS: 'as';
 
 UNDERSCORE: '_';
+
+BOOL: 'false'
+    | 'true'
+    ;
+
+NULL: 'null'
+    ;
 
 ID: [a-zA-Z_]+[a-zA-Z_0-9]*
   ;

@@ -10,7 +10,7 @@ include tmp.x.y;
 
 extern struct Element(Int posx, Int posy, String desc);
 
-struct Elem2(Int length, List elems);
+struct Elem2(Int length, List<String> elems, Bool isElem);
 
 
 namespace Args {
@@ -26,6 +26,7 @@ namespace Args {
             }
     extern Int Width2 = { 10; }
     String name = "test prog";
+    Elem2 elem = Elem2(1, List.of("x"), true);
 }
 
 Int sumStrange(Int n) {

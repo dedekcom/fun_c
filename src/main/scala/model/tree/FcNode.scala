@@ -23,3 +23,4 @@ case class FcFloat(num: String)               extends FcLiteral
 case class FcStr(str: String)                 extends FcLiteral
 case object FcNull                            extends FcLiteral
 case class FcChar(char: Char)                 extends FcLiteral
+case class FcBool(bool: Boolean)              extends FcLiteral

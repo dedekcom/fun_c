@@ -5,9 +5,9 @@ case class FcSource(namespace: FcNamespace, includes: List[FcInclude], body: Lis
 case class FcNamespace(path: List[FcId], alias: Option[FcId]) extends FcNode
 
 case class FcInclude(path: List[FcId]) extends FcNode {
-  def fullNamespace: String = path.map(_.id).mkString(".")
+  lazy val fullNamespace: String = path.map(_.id).mkString(".")
 
-  def namespace: FcId = path.last
+  lazy val namespace: FcId = path.last
 
   def getFile: String = path.dropRight(1).map(_.id).mkString("/") + ".fc"
 }

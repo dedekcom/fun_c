@@ -1,0 +1,21 @@
+namespace Main;
+
+struct ArgOpt(
+    Bool first,
+    Bool second,
+    Bool third,
+    Int counter
+);
+
+
+Int main(Int argc, Array<String> argv) {
+    ArgOpt opts = match(argc) {
+        0 => ArgOpt(false, false, false, 0);
+        1 => ArgOpt(true, false, false, 0);
+        2 => ArgOpt(true, true, false, 0);
+        3 => ArgOpt(true, true, true, 0);
+        _ => ArgOpt(false, false, false, argc);
+    }
+    println(str(opts.counter) + " " + str(opts.first));
+    0;
+}

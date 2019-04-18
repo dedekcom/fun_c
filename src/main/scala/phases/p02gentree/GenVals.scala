@@ -21,4 +21,5 @@ trait GenVals {
 
   override def visitV_str(ctx: FunCParser.V_strContext): FcNode = FcStr(ctx.getText.substring(1, ctx.getText.length - 1))
 
+  override def visitV_bool(ctx: FunCParser.V_boolContext): FcNode = FcBool(ctx.getText.toBoolean)
 }
