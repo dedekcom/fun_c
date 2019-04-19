@@ -28,7 +28,7 @@ class GenTreeSpec extends FlatSpec with Matchers {
 
   def load(filename: String): TestCode = {
     val parser: Parser = Parser.fromFile("src/test/resources/code/parser_test/" + filename)
-    val tree: FcSource = parser.tree
+    val tree: FcSource = parser.source
     val code: String = parser.code
     TestCode(tree, code)
   }

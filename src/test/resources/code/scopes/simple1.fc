@@ -11,11 +11,18 @@ struct ArgOpt(
 Int main(Int argc, Array<String> argv) {
     ArgOpt opts = match(argc) {
         0 => ArgOpt(false, false, false, 0);
-        1 => ArgOpt(true, false, false, 0);
-        2 => ArgOpt(true, true, false, 0);
-        3 => ArgOpt(true, true, true, 0);
+        1 => ArgOpt(true, false, false, 1);
+        2 => ArgOpt(true, true, false, 2);
+        3, 4 => ArgOpt(true, true, true, 4);
         _ => ArgOpt(false, false, false, argc);
     }
-    println(str(opts.counter) + " " + str(opts.first));
+    println("opts = " + str(opts.counter) + " " + str(opts.first));
+
+    Int loop(Int i, Int step, Int acc) {
+       if (i<=0) acc;
+       else loop(i - step, acc + i);
+    }
+    println("sum = " + str(loop(100, 2, 0)));
+
     0;
 }

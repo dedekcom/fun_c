@@ -18,6 +18,6 @@ class Parser(val filename: String, val code: String) {
   val commonTokenStream = new CommonTokenStream(lexer)
   val parser            = new FunCParser(commonTokenStream)
   val visitor           = new GenTreeVisitor(filename)
-  val tree: FcSource    = visitor.visit(parser.source()).asInstanceOf[FcSource]
+  val source: FcSource  = visitor.visit(parser.source()).asInstanceOf[FcSource]
 
 }

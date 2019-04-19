@@ -22,7 +22,7 @@ class CompilerRunner(prjPath: String, mainFile: String) {
 
         case (result, Some(parser)) =>
 
-          parser.tree.includes.foldLeft(result) {
+          parser.source.includes.foldLeft(result) {
             case (nspcs, include: FcInclude) =>
               if (include.path.length < 2)
                 throw CompileException(ErrorIncludeTooShort(include.path.head))
@@ -37,7 +37,7 @@ class CompilerRunner(prjPath: String, mainFile: String) {
     if (namespaces.contains(namespacePath)) (namespaces, None)
     else {
       val parser: Parser = Parser.fromFile(s"$prjPath/$file")
-      val loadedNs = parser.tree.namespace.path.last
+      val loadedNs = parser.source.namespace.path.last
       val namespace = namespacePath.split('.').last
       if (loadedNs.id != namespace)
         throw CompileException(ErrorNamespaceWrongName(loadedNs, namespace))
