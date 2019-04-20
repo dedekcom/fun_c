@@ -1,0 +1,8 @@
+namespace Math;
+
+namespace Const {
+    extern Double Pi = 3.14;
+    extern Double E  = 2.72;
+}
+
+extern Int sqr(Int a) { a * a; }

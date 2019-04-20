@@ -13,11 +13,11 @@ case class ScopeNamespace(
                            body: List[FcBodyStatement],
                            cntLocalFuncs: Int
                          ) {
-  lazy val name: String = namespace.alias match {
+  val name: String = namespace.alias match {
     case Some(FcId(n, _)) => n
     case None => namespace.path.map(_.id).mkString(".")
   }
 
-  lazy val isLocal: Boolean = namespace.path.length == 1
+  val isLocal: Boolean = namespace.path.length == 1
 
 }

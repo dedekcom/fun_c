@@ -1,5 +1,7 @@
 namespace Main;
 
+include math.Math;
+
 struct ArgOpt(
     Bool first,
     Bool second,
@@ -22,6 +24,8 @@ Int main(Int argc, Array<String> argv) {
        else loop(i - step, acc + i);
     }
     println("sum = " + str(loop(100, 2, 0)));
+
+    println("pi = " + str(Math.Const.Pi));
 
     0;
 }
