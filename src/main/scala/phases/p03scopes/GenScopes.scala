@@ -6,14 +6,28 @@ import phases.p01preproc.CompilerRunner
 
 class GenScopes(runner: CompilerRunner) {
 
+  def addPair[K, V](acc: Map[K, V], key: K, value: V): Map[K, V] = acc.get(key) match {
+    case Some(v) => throw new RuntimeException(s"cannot add $key because value already exists")
+    case None => acc.updated(key, value)
+  }
+
   val scopes: Map[String, ScopeContext] = runner.documents.toList.foldLeft(Map[String, ScopeContext]()) {
-      case (curScopes, (key, parser)) => curScopes +
-        (key -> genScope(List(parser.source.name), parser.source, ScopeExternal(Map(), Map(), Map())))
+      case (curScopes, (key, parser)) =>
+        val sc = genScope(List(parser.source.name), parser.source, ScopeExternal(Map(), Map(), Map()))
+        parser.source.namespace.alias match {
+
+          case Some(FcId(id, _)) =>
+            val sc1 = addPair(curScopes, key, sc)
+            addPair(sc1, id, sc)
+
+          case None => addPair(curScopes, key, sc)
+        }
+
     }
 
   def genScope(path: List[String], source: FcSource, extern: ScopeExternal): ScopeContext = {
     val (namespace, updExtern) = source.body.foldLeft(
-      ScopeNamespace(source.namespace, path, source.includes, List(), List(), List(), List(), List(), 0),
+      ScopeNamespace(source.namespace, path, source.includes, List(), Map(), Map(), Map(), List(), 0),
       extern
       ) {
       case ((nms, ext), next) => next match {
@@ -28,27 +42,27 @@ class GenScopes(runner: CompilerRunner) {
 
         case sv: FcStaticVal =>
           (
-            nms.copy(values = sv :: nms.values),
+            nms.copy(values = addPair(nms.values, sv.name :: path, sv)),
             if (sv.isExtern)
-              ext.copy(extVals = ext.extVals + ((sv.name :: nms.path) -> sv))
+              ext.copy(extVals = addPair(ext.extVals, sv.name :: nms.path, sv))
             else
               ext
           )
 
         case st: FcStruct =>
           (
-            nms.copy(structs = st :: nms.structs),
+            nms.copy(structs = addPair(nms.structs, st.name :: nms.path, st)),
             if (st.isExtern)
-              ext.copy(extStructs = ext.extStructs + ((st.name :: nms.path) -> st))
+              ext.copy(extStructs = addPair(ext.extStructs, st.name :: nms.path, st))
             else
               ext
           )
 
         case fn: FcFunc =>
           (
-            nms.copy(funcs = fn :: nms.funcs),
+            nms.copy(funcs = addPair(nms.funcs, fn.name :: nms.path, fn)),
             if (fn.isExtern)
-              ext.copy(extFuncs = ext.extFuncs + ((fn.name :: nms.path) -> fn))
+              ext.copy(extFuncs = addPair(ext.extFuncs, fn.name :: nms.path, fn))
             else
               ext
           )

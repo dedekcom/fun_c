@@ -7,9 +7,9 @@ case class ScopeNamespace(
                            path: List[String],
                            includes: List[FcInclude],
                            scopes: List[ScopeNamespace],
-                           values: List[FcStaticVal],
-                           structs: List[FcStruct],
-                           funcs: List[FcFunc],
+                           values: Map[List[String], FcStaticVal],
+                           structs: Map[List[String], FcStruct],
+                           funcs: Map[List[String], FcFunc],
                            body: List[FcBodyStatement],
                            cntLocalFuncs: Int
                          ) {

@@ -7,7 +7,6 @@ struct ArgOpt(
     Int counter
 );
 
-
 Int main(Int argc, Array<String> argv) {
     ArgOpt opts = match(argc) {
         0 => ArgOpt(false, false, false, 0);
