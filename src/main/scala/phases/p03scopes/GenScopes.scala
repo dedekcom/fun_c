@@ -25,9 +25,13 @@ class GenScopes(runner: CompilerRunner) {
 
     }
 
+  def emptyConstructor(name: FcId): FcLocalFunc = FcLocalFunc(FcType(FcId("Void", TokenMeta.EmptyToken), None),
+    FcId(name.id + "_constructor", name.meta), List(), None, List())
+
   def genScope(path: List[String], source: FcSource, extern: ScopeExternal): ScopeContext = {
     val (namespace, updExtern) = source.body.foldLeft(
-      ScopeNamespace(source.namespace, path, source.includes, List(), Map(), Map(), Map(), List(), 0),
+      ScopeNamespace(source.namespace, path, source.includes, List(), Map(), Map(), Map(), List(),
+        emptyConstructor(source.namespace.path.last), 0),
       extern
       ) {
       case ((nms, ext), next) => next match {
@@ -42,7 +46,10 @@ class GenScopes(runner: CompilerRunner) {
 
         case sv: FcStaticVal =>
           (
-            nms.copy(values = addPair(nms.values, sv.name :: path, sv)),
+            nms.copy(
+              values = addPair(nms.values, sv.name :: path, sv),
+              constructor = nms.constructor.copy(body = sv.declaredVal :: nms.constructor.body)
+            ),
             if (sv.isExtern)
               ext.copy(extVals = addPair(ext.extVals, sv.name :: nms.path, sv))
             else
@@ -72,7 +79,10 @@ class GenScopes(runner: CompilerRunner) {
     }
     ScopeContext(
       updExtern,
-      namespace.copy(body = source.body)
+      namespace.copy(
+        body = source.body,
+        constructor = namespace.constructor.copy(body = namespace.constructor.body.reverse)
+      )
     )
   }
 

@@ -14,10 +14,14 @@ object Parser {
 
 class Parser(val filename: String, val code: String) {
 
-  val lexer             = new FunCLexer(CharStreams.fromString(code))
-  val commonTokenStream = new CommonTokenStream(lexer)
-  val parser            = new FunCParser(commonTokenStream)
-  val visitor           = new GenTreeVisitor(filename)
-  val source: FcSource  = visitor.visit(parser.source()).asInstanceOf[FcSource]
+  val source: FcSource = genSource
+
+  private def genSource: FcSource = {
+    val lexer             = new FunCLexer(CharStreams.fromString(code))
+    val commonTokenStream = new CommonTokenStream(lexer)
+    val parser            = new FunCParser(commonTokenStream)
+    val visitor           = new GenTreeVisitor(filename)
+    visitor.visit(parser.source()).asInstanceOf[FcSource]
+  }
 
 }
