@@ -29,31 +29,30 @@ class GenScopes(runner: CompilerRunner) {
     FcId(name.id + "_constructor", name.meta), List(), None, List())
 
   def genScope(path: List[String], source: FcSource, extern: ScopeExternal): ScopeContext = {
-    val (namespace, updExtern) = source.body.foldLeft(
-      ScopeNamespace(source.namespace, path, source.includes, List(), Map(), Map(), Map(), List(),
-        emptyConstructor(source.namespace.path.last), 0),
-      extern
+    val (namespace, updExtern, constructorFun) = source.body.foldLeft(
+      ScopeNamespace(source.namespace, path, source.includes, List(), Map(), Map(), Map(), List(), None, 0),
+      extern,
+      List[FcLocalVal]()
       ) {
-      case ((nms, ext), next) => next match {
+      case ((nms, ext, constr), next) => next match {
 
         case ln: FcLocalNamespace =>
           val locSrc = FcSource(FcNamespace(List(ln.name), None), List(), ln.body)
           val sc = genScope(locSrc.name :: path, locSrc, ext)
           (
             nms.copy(scopes = sc.scope :: nms.scopes),
-            sc.external
+            sc.external,
+            constr
           )
 
         case sv: FcStaticVal =>
           (
-            nms.copy(
-              values = addPair(nms.values, sv.name :: path, sv),
-              constructor = nms.constructor.copy(body = sv.declaredVal :: nms.constructor.body)
-            ),
+            nms.copy(values = addPair(nms.values, sv.name :: path, sv)),
             if (sv.isExtern)
               ext.copy(extVals = addPair(ext.extVals, sv.name :: nms.path, sv))
             else
-              ext
+              ext,
+            sv.declaredVal :: constr
           )
 
         case st: FcStruct =>
@@ -62,7 +61,8 @@ class GenScopes(runner: CompilerRunner) {
             if (st.isExtern)
               ext.copy(extStructs = addPair(ext.extStructs, st.name :: nms.path, st))
             else
-              ext
+              ext,
+            constr
           )
 
         case fn: FcFunc =>
@@ -71,17 +71,19 @@ class GenScopes(runner: CompilerRunner) {
             if (fn.isExtern)
               ext.copy(extFuncs = addPair(ext.extFuncs, fn.name :: nms.path, fn))
             else
-              ext
+              ext,
+            constr
           )
 
-        case _ => (nms, ext)
+        case _ => (nms, ext, constr)
       }
     }
+    val constructor = FcFunc(isExtern = false, emptyConstructor(source.namespace.path.last).copy(body = constructorFun))
     ScopeContext(
       updExtern,
       namespace.copy(
         body = source.body,
-        constructor = namespace.constructor.copy(body = namespace.constructor.body.reverse)
+        constructor = Some(constructor.declaredFunc)
       )
     )
   }

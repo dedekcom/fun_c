@@ -11,7 +11,7 @@ case class ScopeNamespace(
                            structs: Map[List[String], FcStruct],
                            funcs: Map[List[String], FcFunc],
                            body: List[FcBodyStatement],
-                           constructor: FcLocalFunc,
+                           constructor: Option[FcLocalFunc],
                            cntLocalFuncs: Int
                          ) {
   val name: String = namespace.alias match {
